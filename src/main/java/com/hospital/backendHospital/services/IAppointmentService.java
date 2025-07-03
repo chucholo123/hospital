@@ -16,7 +16,7 @@ public interface IAppointmentService {
 
     AppointmentResponseDto createAppointment(User user, CreateAppointmentDto createAppointmentDto);
 
-    void completeAppointment(Long id);
+    void completeAppointment(User user, Long id);
 
     void cancelAppointment(User user, Long id);
 }

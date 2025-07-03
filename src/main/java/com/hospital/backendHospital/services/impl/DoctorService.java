@@ -45,12 +45,12 @@ public class DoctorService implements IDoctorService {
 
         Specialty specialty = specialtyRepository.findById(createDoctorDto.getSpecialty()).orElseThrow(()-> new EntityNotFoundException("Specialty not found"));
 
-        if (userRepository.existsByUsername(createDoctorDto.getUsername())){
+        if (userRepository.existsByEmail(createDoctorDto.getEmail())){
             throw new IllegalArgumentException("Username already exists");
         }
 
         User user = User.builder()
-                .username(createDoctorDto.getUsername())
+                .email(createDoctorDto.getEmail())
                 .firstName(createDoctorDto.getFirstName())
                 .lastName(createDoctorDto.getLastName())
                 .password(passwordEncoder.encode(createDoctorDto.getPassword()))

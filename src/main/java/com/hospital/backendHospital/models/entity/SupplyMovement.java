@@ -21,7 +21,7 @@ public class SupplyMovement {
     private Long id;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @Column(name = "supply_id", nullable = false)
+    @JoinColumn(name = "supply_id", nullable = false)
     private MedicalSupply supply;
 
     @Enumerated(EnumType.STRING)
@@ -38,6 +38,6 @@ public class SupplyMovement {
     private LocalDateTime timestamp;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @Column(nullable = false)
+    @JoinColumn(name = "performed_by", nullable = false)
     private User performedBy;
 }

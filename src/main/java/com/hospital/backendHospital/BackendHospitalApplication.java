@@ -88,9 +88,9 @@ public class BackendHospitalApplication {
 									   String lastName,
 									   String password,
 									   Role role) {
-		if (!repository.existsByUsername(username)) {
+		if (!repository.existsByEmail(username)) {
 			User user = User.builder()
-					.username(username)
+					.email(username)
 					.firstName(firstName)
 					.lastName(lastName)
 					.password(encoder.encode(password))

@@ -40,7 +40,7 @@ public class JwtService {
 
     private String buildToken(final User user, final long expiration) {
         return Jwts.builder()
-                .subject(user.getUsername())
+                .subject(user.getEmail())
                 .claim("roles", user.getRoles().stream()
                         .map(role -> role.getRoleEnum().name())
                         .toList())
@@ -52,7 +52,7 @@ public class JwtService {
 
     public boolean isTokenValid(String token, User user) {
         final String username = extractUsername(token);
-        return (username.equals(user.getUsername())) && !isTokenExpired(token);
+        return (username.equals(user.getEmail())) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {

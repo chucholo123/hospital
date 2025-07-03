@@ -4,6 +4,7 @@ import com.hospital.backendHospital.auth.service.AuthService;
 import com.hospital.backendHospital.models.dto.patient.CreatePatientDto;
 import com.hospital.backendHospital.models.dto.token.AuthRequest;
 import com.hospital.backendHospital.models.dto.token.TokenResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,13 +19,13 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponse> register(@RequestBody CreatePatientDto request){
+    public ResponseEntity<TokenResponse> register(@Valid @RequestBody CreatePatientDto request){
         final TokenResponse response = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> authenticate(@RequestBody AuthRequest request){
+    public ResponseEntity<TokenResponse> authenticate(@Valid @RequestBody AuthRequest request){
         final TokenResponse response = authService.authenticate(request);
         return ResponseEntity.ok(response);
     }

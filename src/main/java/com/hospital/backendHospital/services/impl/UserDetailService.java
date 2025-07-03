@@ -20,7 +20,7 @@ public class UserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(()-> new UsernameNotFoundException("The username " + username + " doesnt exist"));
+        User user = userRepository.findByEmail(username).orElseThrow(()-> new UsernameNotFoundException("The username " + username + " doesnt exist"));
 
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
 
@@ -32,7 +32,7 @@ public class UserDetailService implements UserDetailsService {
                 .forEach(permission -> authorityList.add(new SimpleGrantedAuthority(permission.getName())));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
+                user.getEmail(),
                 user.getPassword(),
                 authorityList);
     }

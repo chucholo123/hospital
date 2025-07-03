@@ -129,8 +129,12 @@ public class AppointmentService implements IAppointmentService {
 
     @Override
     @Transactional
-    public void completeAppointment(Long id) {
+    public void completeAppointment(User user, Long id) {
         Appointment appointment = appointmentRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Appointment not found with id "+ id));
+
+        if (!appointment.getDoctor().getId().equals(user.getId())){
+            throw new InvalidDataException("Error cancelling appointment");
+        }
 
         if (appointment.getStatus().equals(AppointmentStatus.COMPLETED) || appointment.getStatus().equals(AppointmentStatus.CANCELLED)){
             throw new InvalidDataException("Appointment has already been completed");

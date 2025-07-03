@@ -2,13 +2,10 @@ package com.hospital.backendHospital.services.impl;
 
 import com.hospital.backendHospital.exceptions.EntityNotFoundException;
 import com.hospital.backendHospital.mappers.PatientMapper;
-import com.hospital.backendHospital.models.dto.patient.CreatePatientDto;
 import com.hospital.backendHospital.models.dto.patient.PatientResponseDto;
 import com.hospital.backendHospital.models.dto.patient.PatientSummaryDto;
 import com.hospital.backendHospital.models.dto.patient.UpdatePatientDto;
 import com.hospital.backendHospital.models.entity.Patient;
-import com.hospital.backendHospital.models.entity.Role;
-import com.hospital.backendHospital.models.entity.RoleEnum;
 import com.hospital.backendHospital.models.entity.User;
 import com.hospital.backendHospital.repositories.PatientRepository;
 import com.hospital.backendHospital.repositories.RoleRepository;
@@ -20,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +45,7 @@ public class PatientService implements IPatientService {
     @Override
     @Transactional
     public Patient createPatient(String username, String bloodType, String emergencyContact) {
-        User user = userRepository.findByUsername(username).orElseThrow(()-> new EntityNotFoundException("User not found"));
+        User user = userRepository.findByEmail(username).orElseThrow(()-> new EntityNotFoundException("User not found"));
 
         Patient patient = Patient.builder()
                 .user(user)

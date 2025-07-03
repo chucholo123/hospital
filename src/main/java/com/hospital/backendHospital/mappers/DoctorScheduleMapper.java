@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface DoctorScheduleMapper {
 
-    @Mapping(target = "doctorName", source = "doctor.user.username")
+    @Mapping(target = "doctorName", source = "doctor.user.firstName")
     DoctorScheduleResponseDto toResponseDto(DoctorSchedule doctorSchedule);
 
     List<DoctorScheduleResponseDto> toListSchedules(List<DoctorSchedule> doctorSchedules);

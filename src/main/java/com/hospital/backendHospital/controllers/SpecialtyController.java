@@ -19,20 +19,17 @@ public class SpecialtyController {
     private final ISpecialtyService specialtyService;
 
     @GetMapping
-    public ResponseEntity<List<SpecialtyResponseDto>> listSpecialties(){
-        List<SpecialtyResponseDto> specialties = specialtyService.listSpecialties();
-        return ResponseEntity.ok(specialties);
+    public ResponseEntity<List<SpecialtyResponseDto>> getAllSpecialties(){
+        return ResponseEntity.ok(specialtyService.listSpecialties());
     }
 
     @GetMapping("/search")
-    public ResponseEntity<SpecialtyResponseDto> listSpecialtyByName(@RequestParam String name){
-        SpecialtyResponseDto specialty = specialtyService.listSpecialtyByName(name);
-        return ResponseEntity.ok(specialty);
+    public ResponseEntity<SpecialtyResponseDto> getSpecialtyByName(@RequestParam String name){
+        return ResponseEntity.ok(specialtyService.listSpecialtyByName(name));
     }
 
     @PostMapping
     public ResponseEntity<SpecialtyResponseDto> createSpecialty(@Valid @RequestBody CreateSpecialtyDto createSpecialtyDto){
-        SpecialtyResponseDto specialty = specialtyService.createSpecialty(createSpecialtyDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(specialty);
+        return ResponseEntity.status(HttpStatus.CREATED).body(specialtyService.createSpecialty(createSpecialtyDto));
     }
 }

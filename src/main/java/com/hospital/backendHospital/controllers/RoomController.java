@@ -19,23 +19,17 @@ public class RoomController {
     private final IRoomService roomService;
 
     @GetMapping
-    public ResponseEntity<List<RoomResponseDto>> listRooms(){
-        List<RoomResponseDto> rooms = roomService.listRooms();
-
-        return ResponseEntity.ok(rooms);
+    public ResponseEntity<List<RoomResponseDto>> getAllRooms(){
+        return ResponseEntity.ok(roomService.listRooms());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RoomResponseDto> listRoomById(@PathVariable Long id){
-        RoomResponseDto room = roomService.listRoomById(id);
-
-        return ResponseEntity.ok(room);
+        return ResponseEntity.ok(roomService.listRoomById(id));
     }
 
     @PostMapping
     public ResponseEntity<RoomResponseDto> createRoom(@Valid @RequestBody CreateRoomDto createRoomDto){
-        RoomResponseDto room = roomService.createRoom(createRoomDto);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(room);
+        return ResponseEntity.status(HttpStatus.CREATED).body(roomService.createRoom(createRoomDto));
     }
 }

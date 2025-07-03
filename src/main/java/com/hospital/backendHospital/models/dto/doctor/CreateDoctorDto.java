@@ -1,9 +1,6 @@
 package com.hospital.backendHospital.models.dto.doctor;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CreateDoctorDto {
 
-    @Size(min = 10, max = 20, message = "Username must be between 10 and 20 characters")
-    @NotBlank(message = "Username is required")
-    private String username;
+    @Email(message = "Email must be valid")
+    @NotBlank(message = "Email is required")
+    private String email;
 
     @Size(min = 10, max = 30, message = "First name must be between 10 and 30 characters")
     @NotBlank(message = "Username is required")

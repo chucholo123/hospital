@@ -42,7 +42,7 @@ public class AuthService {
         Role patientRole = roleRepository.findByRoleEnum(RoleEnum.PATIENT).orElseThrow(()-> new EntityNotFoundException("Role not found"));
 
         final User user = User.builder()
-                .username(request.getUsername())
+                .email(request.getEmail())
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -51,7 +51,7 @@ public class AuthService {
                 .build();
 
         final User savedUser = userRepository.save(user);
-        final Patient savedPatient = patientService.createPatient(request.getUsername(), request.getBloodType(), request.getEmergencyContact());
+        final Patient savedPatient = patientService.createPatient(request.getEmail(), request.getBloodType(), request.getEmergencyContact());
         final String jwtToken = jwtService.generateToken(savedUser);
         final String refreshToken = jwtService.generateRefreshToken(savedUser);
 
@@ -60,9 +60,9 @@ public class AuthService {
     }
 
     public TokenResponse authenticate(final AuthRequest request){
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
-        final User user = userRepository.findByUsername(request.getUsername()).orElseThrow(()-> new UsernameNotFoundException("Username not found"));
+        final User user = userRepository.findByEmail(request.getEmail()).orElseThrow(()-> new UsernameNotFoundException("Email not found"));
         final String accessToken = jwtService.generateToken(user);
         final String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
@@ -103,7 +103,7 @@ public class AuthService {
             return null;
         }
 
-        final User user = this.userRepository.findByUsername(username).orElseThrow();
+        final User user = this.userRepository.findByEmail(username).orElseThrow();
         final boolean isTokenValid = jwtService.isTokenValid(refreshToken, user);
         if (!isTokenValid) {
             return null;
@@ -118,7 +118,7 @@ public class AuthService {
 
     public User getAuthenticatedUser(){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByUsername(username)
+        return userRepository.findByEmail(username)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
     }
 }

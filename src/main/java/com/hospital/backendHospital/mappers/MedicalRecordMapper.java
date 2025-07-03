@@ -10,8 +10,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface MedicalRecordMapper {
 
-    @Mapping(target = "patientName", source = "patient.user.username")
-    @Mapping(target = "doctorName", source = "doctor.user.username")
+    @Mapping(target = "patientName", source = "patient.user.firstName")
+    @Mapping(target = "doctorName", source = "doctor.user.firstName")
     @Mapping(target = "appointmentId", source = "appointment.id")
     MedicalRecordResponseDto toResponseDto(MedicalRecord medicalRecord);
 
