@@ -7,15 +7,19 @@ import com.hospital.backendHospital.models.dto.doctorSchedule.CreateDoctorSchedu
 import com.hospital.backendHospital.models.dto.doctorSchedule.DoctorScheduleResponseDto;
 import com.hospital.backendHospital.models.entity.Doctor;
 import com.hospital.backendHospital.models.entity.DoctorSchedule;
+import com.hospital.backendHospital.models.filters.DoctorScheduleFilterRequest;
 import com.hospital.backendHospital.repositories.DoctorRepository;
 import com.hospital.backendHospital.repositories.DoctorScheduleRepository;
 import com.hospital.backendHospital.services.IDoctorScheduleService;
+import jakarta.persistence.criteria.Join;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,23 +31,37 @@ public class DoctorScheduleService implements IDoctorScheduleService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<DoctorScheduleResponseDto> listDoctorSchedules() {
-        List<DoctorSchedule> doctorSchedules = doctorScheduleRepository.findAll();
-        return doctorScheduleMapper.toListSchedules(doctorSchedules);
-    }
+    public Page<DoctorScheduleResponseDto> filterDoctorSchedules(DoctorScheduleFilterRequest filter, Pageable pageable) {
+        Specification<DoctorSchedule> spec = Specification.where(null);
 
-    @Override
-    @Transactional(readOnly = true)
-    public DoctorScheduleResponseDto listScheduleByDoctorId(Long id) {
-        Doctor doctor = doctorRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Doctor not found"));
-
-        DoctorSchedule doctorSchedule = doctorScheduleRepository.findByDoctorId(doctor.getId());
-
-        if (doctorSchedule == null){
-            throw new EntityNotFoundException("Schedule not found");
+        if (filter.getDayOfWeek() != null){
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(root.get("dayOfWeek"), filter.getDayOfWeek()));
         }
 
-        return doctorScheduleMapper.toResponseDto(doctorSchedule);
+        if (filter.getStartTime() != null){
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(root.get("startTime"), filter.getStartTime()));
+        }
+
+        if (filter.getFirstName() != null){
+            spec = spec.and((root, query, cb) -> {
+                Join<Object, Object> doctorJoin = root.join("doctor");
+                Join<Object, Object> userJoin = doctorJoin.join("user");
+                return cb.like(cb.lower(userJoin.get("firstName")), "%" + filter.getFirstName().toLowerCase() + "%");
+            });
+        }
+
+        if (filter.getLastName() != null && !filter.getLastName().isBlank()) {
+            spec = spec.and((root, query, cb) -> {
+                Join<Object, Object> doctorJoin = root.join("doctor");
+                Join<Object, Object> userJoin = doctorJoin.join("user");
+                return cb.like(cb.lower(userJoin.get("lastName")), "%" + filter.getLastName().toLowerCase() + "%");
+            });
+        }
+
+        return doctorScheduleRepository.findAll(spec, pageable)
+                .map(doctorScheduleMapper::toResponseDto);
     }
 
     @Override

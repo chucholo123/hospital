@@ -1,9 +1,6 @@
 package com.hospital.backendHospital;
 
-import com.hospital.backendHospital.models.entity.Permission;
-import com.hospital.backendHospital.models.entity.Role;
-import com.hospital.backendHospital.models.entity.RoleEnum;
-import com.hospital.backendHospital.models.entity.User;
+import com.hospital.backendHospital.models.entity.*;
 import com.hospital.backendHospital.repositories.PermissionRepository;
 import com.hospital.backendHospital.repositories.RoleRepository;
 import com.hospital.backendHospital.repositories.UserRepository;
@@ -47,6 +44,9 @@ public class BackendHospitalApplication {
 			Role roleDoctor = createRoleIfNotExists(roleRepository, RoleEnum.DOCTOR,
 					Set.of(createPermission, readPermission, updatePermission));
 
+			Role roleRecepcionist = createRoleIfNotExists(roleRepository, RoleEnum.RECEPCIONIST,
+					Set.of(createPermission, readPermission));
+
 			Role rolePatient = createRoleIfNotExists(roleRepository, RoleEnum.PATIENT,
 					Set.of(readPermission));
 
@@ -55,9 +55,6 @@ public class BackendHospitalApplication {
 			// 3. Crear usuarios
 			createUserIfNotExists(userRepository, passwordEncoder,
 					"chucholo", "Irving Jesus", "Garcia Flores", "1234", roleAdmin);
-
-			createUserIfNotExists(userRepository, passwordEncoder,
-					"javierher", "Javier", "Hernandez", "1234", roleDoctor);
 		};
 	}
 

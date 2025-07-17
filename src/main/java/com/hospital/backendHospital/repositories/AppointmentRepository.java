@@ -2,16 +2,18 @@ package com.hospital.backendHospital.repositories;
 
 import com.hospital.backendHospital.models.entity.Appointment;
 import com.hospital.backendHospital.models.entity.AppointmentStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
-public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
-    List<Appointment> findAllByPatientId(Long id);
+public interface AppointmentRepository extends JpaRepository<Appointment, Long>, JpaSpecificationExecutor<Appointment> {
+    Page<Appointment> findAllByPatientId(Long id, Pageable pageable);
 
     Appointment findByPatientIdAndStatus(Long id, AppointmentStatus status);
 

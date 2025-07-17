@@ -1,5 +1,6 @@
 package com.hospital.backendHospital.services;
 
+import com.hospital.backendHospital.models.dto.patient.CreatePatientDto;
 import com.hospital.backendHospital.models.dto.patient.PatientResponseDto;
 import com.hospital.backendHospital.models.dto.patient.PatientSummaryDto;
 import com.hospital.backendHospital.models.dto.patient.UpdatePatientDto;
@@ -14,7 +15,7 @@ public interface IPatientService {
 
     List<PatientSummaryDto> listPatientsByFirstName(String firstName);
 
-    Patient createPatient(String username, String bloodType, String emergencyContact);
+    PatientResponseDto createPatient(CreatePatientDto createPatientDto);
 
     PatientResponseDto updatePatient(User user, UpdatePatientDto updatePatientDto);
 

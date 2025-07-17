@@ -1,18 +1,20 @@
 package com.hospital.backendHospital.controllers;
 
 import com.hospital.backendHospital.auth.service.AuthService;
-import com.hospital.backendHospital.models.dto.doctor.CreateDoctorDto;
+import com.hospital.backendHospital.models.dto.doctor.CreateDoctorAndScheduleDto;
 import com.hospital.backendHospital.models.dto.doctor.DoctorResponseDto;
 import com.hospital.backendHospital.models.dto.doctor.UpdateDoctorDto;
 import com.hospital.backendHospital.models.entity.User;
+import com.hospital.backendHospital.models.filters.DoctorFilterRequest;
 import com.hospital.backendHospital.services.IDoctorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,14 +25,16 @@ public class DoctorController {
     private final AuthService authService;
 
     @GetMapping
-    public ResponseEntity<List<DoctorResponseDto>> listDoctors(){
-        List<DoctorResponseDto> doctors = doctorService.listDoctors();
+    public ResponseEntity<Page<DoctorResponseDto>> filterDoctors
+            (DoctorFilterRequest filter, @PageableDefault(page = 0, size = 5) Pageable pageable){
+        Page<DoctorResponseDto> doctors = doctorService.filterDoctors(filter, pageable);
+
         return ResponseEntity.ok(doctors);
     }
 
     @PostMapping
-    public ResponseEntity<DoctorResponseDto> createDoctor(@Valid @RequestBody CreateDoctorDto createDoctorDto){
-        DoctorResponseDto doctorResponseDto = doctorService.createDoctor(createDoctorDto);
+    public ResponseEntity<DoctorResponseDto> createDoctor(@Valid @RequestBody CreateDoctorAndScheduleDto createDoctorAndScheduleDto){
+        DoctorResponseDto doctorResponseDto = doctorService.createDoctor(createDoctorAndScheduleDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(doctorResponseDto);
     }
 

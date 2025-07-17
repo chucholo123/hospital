@@ -1,16 +1,17 @@
 package com.hospital.backendHospital.services;
 
+import com.hospital.backendHospital.models.filters.AppointmentFilterRequest;
 import com.hospital.backendHospital.models.dto.appointment.AppointmentResponseDto;
 import com.hospital.backendHospital.models.dto.appointment.CreateAppointmentDto;
 import com.hospital.backendHospital.models.entity.User;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface IAppointmentService {
 
-    List<AppointmentResponseDto> listAppointmentsByPatientId(Long id);
+    Page<AppointmentResponseDto> filterAppointments(AppointmentFilterRequest filter, Pageable pageable);
 
-    AppointmentResponseDto listActiveAppointmentByPatientId(Long id);
+    Page<AppointmentResponseDto> listAppointmentsByPatient(User user, Pageable pageable);
 
     AppointmentResponseDto listActiveAppointmentByPatient(User user);
 

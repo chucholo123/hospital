@@ -3,6 +3,7 @@ package com.hospital.backendHospital.services.impl;
 import com.hospital.backendHospital.exceptions.EntityNotFoundException;
 import com.hospital.backendHospital.exceptions.InvalidDataException;
 import com.hospital.backendHospital.mappers.AppointmentMapper;
+import com.hospital.backendHospital.models.filters.AppointmentFilterRequest;
 import com.hospital.backendHospital.models.dto.appointment.AppointmentResponseDto;
 import com.hospital.backendHospital.models.dto.appointment.CreateAppointmentDto;
 import com.hospital.backendHospital.models.entity.*;
@@ -11,6 +12,9 @@ import com.hospital.backendHospital.repositories.DoctorRepository;
 import com.hospital.backendHospital.repositories.PatientRepository;
 import com.hospital.backendHospital.services.IAppointmentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,29 +32,44 @@ public class AppointmentService implements IAppointmentService {
     private final AppointmentMapper appointmentMapper;
 
     @Override
-    public List<AppointmentResponseDto> listAppointmentsByPatientId(Long id) {
-        Patient patient = patientRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Patient not found"));
+    public Page<AppointmentResponseDto> filterAppointments(AppointmentFilterRequest filter, Pageable pageable) {
+        Specification<Appointment> spec = Specification.where(null);
 
-        List<Appointment> appointments = appointmentRepository.findAllByPatientId(patient.getId());
+        if (filter.getPatientId() != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(root.get("patient").get("id"), filter.getPatientId()));
+        }
+
+        if (filter.getDoctorId() != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(root.get("doctor").get("id"), filter.getDoctorId()));
+        }
+
+        if (filter.getStatus() != null && !filter.getStatus().isBlank()) {
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(cb.upper(root.get("status")), filter.getStatus().toUpperCase()));
+        }
+
+        if (filter.getDate() != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(root.get("date"), filter.getDate()));
+        }
+
+        return appointmentRepository.findAll(spec, pageable)
+                .map(appointmentMapper::toResponseDto);
+    }
+
+    @Override
+    public Page<AppointmentResponseDto> listAppointmentsByPatient(User user, Pageable pageable) {
+        Patient patient = patientRepository.findByUser(user).orElseThrow(()-> new EntityNotFoundException("Patient not found"));
+
+        Page<Appointment> appointments = appointmentRepository.findAllByPatientId(patient.getId(), pageable);
 
         if (appointments.isEmpty()){
             throw new EntityNotFoundException("Appointments not found");
         }
 
-        return appointmentMapper.toListAppointments(appointments);
-    }
-
-    @Override
-    public AppointmentResponseDto listActiveAppointmentByPatientId(Long id) {
-        Patient patient = patientRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Patient not found"));
-
-        Appointment appointment = appointmentRepository.findByPatientIdAndStatus(patient.getId(), AppointmentStatus.PENDING);
-
-        if (appointment == null){
-            throw new EntityNotFoundException("Appointment not found");
-        }
-
-        return appointmentMapper.toResponseDto(appointment);
+        return appointments.map(appointmentMapper::toResponseDto);
     }
 
     @Override

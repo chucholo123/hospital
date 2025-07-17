@@ -25,6 +25,9 @@ public class Doctor {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "specialty_id", nullable = false)
     private Specialty specialty;

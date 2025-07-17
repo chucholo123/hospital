@@ -2,13 +2,13 @@ package com.hospital.backendHospital.services.impl;
 
 import com.hospital.backendHospital.exceptions.EntityNotFoundException;
 import com.hospital.backendHospital.mappers.PatientMapper;
+import com.hospital.backendHospital.models.dto.patient.CreatePatientDto;
 import com.hospital.backendHospital.models.dto.patient.PatientResponseDto;
 import com.hospital.backendHospital.models.dto.patient.PatientSummaryDto;
 import com.hospital.backendHospital.models.dto.patient.UpdatePatientDto;
 import com.hospital.backendHospital.models.entity.Patient;
 import com.hospital.backendHospital.models.entity.User;
 import com.hospital.backendHospital.repositories.PatientRepository;
-import com.hospital.backendHospital.repositories.RoleRepository;
 import com.hospital.backendHospital.repositories.UserRepository;
 import com.hospital.backendHospital.services.IPatientService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,6 @@ public class PatientService implements IPatientService {
 
     private final PatientRepository patientRepository;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PatientMapper patientMapper;
     private final PasswordEncoder passwordEncoder;
 
@@ -44,19 +43,34 @@ public class PatientService implements IPatientService {
 
     @Override
     @Transactional
-    public Patient createPatient(String username, String bloodType, String emergencyContact) {
-        User user = userRepository.findByEmail(username).orElseThrow(()-> new EntityNotFoundException("User not found"));
+    public PatientResponseDto createPatient(CreatePatientDto createPatientDto) {
+        User user = userRepository.findByEmail(createPatientDto.getEmail()).orElseThrow(()-> new EntityNotFoundException("User not found"));
 
         Patient patient = Patient.builder()
                 .user(user)
-                .bloodType(bloodType)
-                .emergencyContact(emergencyContact)
+                .dateOfBirth(createPatientDto.getDateOfBirth())
+                .gender(createPatientDto.getGender())
+                .maritalStatus(createPatientDto.getMaritalStatus())
+                .address(createPatientDto.getAddress())
+                .phoneNumber(createPatientDto.getPhoneNumber())
+                .allergies(createPatientDto.getAllergies())
+                .chronicDiseases(createPatientDto.getChronicDiseases())
+                .currentMedications(createPatientDto.getCurrentMedications())
+                .height(createPatientDto.getHeight())
+                .weight(createPatientDto.getWeight())
+                .isSmoker(createPatientDto.getIsSmoker())
+                .insuranceProvider(createPatientDto.getInsuranceProvider())
+                .insuranceNumber(createPatientDto.getInsuranceNumber())
+                .emergencyContact(createPatientDto.getEmergencyContact())
+                .emergencyContactName(createPatientDto.getEmergencyContactName())
+                .emergencyContactRelation(createPatientDto.getEmergencyContactRelation())
+                .bloodType(createPatientDto.getBloodType())
                 .isActive(true)
                 .build();
 
         patientRepository.save(patient);
 
-        return patient;
+        return patientMapper.toResponseDto(patient);
     }
 
     @Override

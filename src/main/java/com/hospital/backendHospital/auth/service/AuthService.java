@@ -6,6 +6,7 @@ import com.hospital.backendHospital.exceptions.EntityNotFoundException;
 import com.hospital.backendHospital.models.dto.patient.CreatePatientDto;
 import com.hospital.backendHospital.models.dto.token.AuthRequest;
 import com.hospital.backendHospital.models.dto.token.TokenResponse;
+import com.hospital.backendHospital.models.dto.user.CreateUserDto;
 import com.hospital.backendHospital.models.entity.Patient;
 import com.hospital.backendHospital.models.entity.Role;
 import com.hospital.backendHospital.models.entity.RoleEnum;
@@ -37,7 +38,7 @@ public class AuthService {
     private final PatientService patientService;
     private final RoleRepository roleRepository;
 
-    public TokenResponse register(final CreatePatientDto request){
+    public TokenResponse register(final CreateUserDto request){
 
         Role patientRole = roleRepository.findByRoleEnum(RoleEnum.PATIENT).orElseThrow(()-> new EntityNotFoundException("Role not found"));
 
@@ -51,7 +52,7 @@ public class AuthService {
                 .build();
 
         final User savedUser = userRepository.save(user);
-        final Patient savedPatient = patientService.createPatient(request.getEmail(), request.getBloodType(), request.getEmergencyContact());
+//        final Patient savedPatient = patientService.createPatient(request.getEmail(), request.getBloodType(), request.getEmergencyContact());
         final String jwtToken = jwtService.generateToken(savedUser);
         final String refreshToken = jwtService.generateRefreshToken(savedUser);
 
