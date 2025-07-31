@@ -13,6 +13,7 @@ import com.hospital.backendHospital.repositories.SupplyUsageRepository;
 import com.hospital.backendHospital.services.ISupplyUsageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +29,7 @@ public class SupplyUsageService implements ISupplyUsageService {
     private final SupplyMovementRepository supplyMovementRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<SupplyUsageResponseDto> getUsageByHospitalization(Long hospitalizationId) {
         List<SupplyUsage> supplyUsages = supplyUsageRepository.findAll();
 
@@ -35,6 +37,7 @@ public class SupplyUsageService implements ISupplyUsageService {
     }
 
     @Override
+    @Transactional
     public SupplyUsageResponseDto registerUsage(User user, CreateSupplyUsageDto createSupplyUsageDto) {
         Hospitalization hospitalization = hospitalizationRepository.findById(createSupplyUsageDto.getHospitalizationId()).orElseThrow(
                 ()-> new EntityNotFoundException("Hospitalization not found"));
@@ -66,7 +69,6 @@ public class SupplyUsageService implements ISupplyUsageService {
                 .supply(medicalSupply)
                 .type(MovementType.OUT)
                 .quantityChanged(createSupplyUsageDto.getQuantityUsed())
-                .reason("Used in hospitalization ID " + hospitalization.getId())
                 .timestamp(LocalDateTime.now())
                 .performedBy(user)
                 .build();

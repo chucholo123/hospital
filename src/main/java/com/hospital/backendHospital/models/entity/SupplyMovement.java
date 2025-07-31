@@ -32,9 +32,6 @@ public class SupplyMovement {
     private int quantityChanged;
 
     @Column(nullable = false)
-    private String reason;
-
-    @Column(nullable = false)
     private LocalDateTime timestamp;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

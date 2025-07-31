@@ -14,11 +14,13 @@ import java.time.LocalTime;
 @Builder
 public class DoctorScheduleResponseDto {
 
+    private Long doctorId;
+
+    private String doctorName;
+
     private DayOfWeek dayOfWeek;
 
     private LocalTime startTime;
 
     private LocalTime endTime;
-
-    private String doctorName;
 }

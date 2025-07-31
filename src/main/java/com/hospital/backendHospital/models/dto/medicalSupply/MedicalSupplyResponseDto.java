@@ -1,5 +1,6 @@
 package com.hospital.backendHospital.models.dto.medicalSupply;
 
+import com.hospital.backendHospital.models.entity.UnityEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,15 +16,11 @@ public class MedicalSupplyResponseDto {
 
     private String name;
 
-    private String description;
-
     private int quantity;
 
     private int minimumStock;
 
-    private BigDecimal unitCost;
+    private UnityEnum unity;
 
-    private String category;
-
-    private boolean isActive;
+    private boolean active;
 }

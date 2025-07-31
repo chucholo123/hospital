@@ -22,8 +22,6 @@ public class SupplyMovementResponseDto {
 
     private int quantityChanged;
 
-    private String reason;
-
     private LocalDateTime timestamp;
 
     private String performedBy;

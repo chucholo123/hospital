@@ -21,7 +21,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, updatable = false)
+    @Column(unique = true, nullable = false, updatable = true)
     private String email;
 
     @Column(nullable = false)
@@ -33,8 +33,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "is_active", nullable = false)
-    private boolean isActive = true;
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean active = true;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))

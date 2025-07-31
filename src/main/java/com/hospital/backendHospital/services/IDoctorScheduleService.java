@@ -2,6 +2,7 @@ package com.hospital.backendHospital.services;
 
 import com.hospital.backendHospital.models.dto.doctorSchedule.CreateDoctorScheduleDto;
 import com.hospital.backendHospital.models.dto.doctorSchedule.DoctorScheduleResponseDto;
+import com.hospital.backendHospital.models.entity.Doctor;
 import com.hospital.backendHospital.models.filters.DoctorScheduleFilterRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

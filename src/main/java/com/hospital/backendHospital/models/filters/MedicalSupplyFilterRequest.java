@@ -1,4 +1,4 @@
-package com.hospital.backendHospital.models.dto.supplyCategory;
+package com.hospital.backendHospital.models.filters;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SupplyCategoryResponseDto {
-
-    private Long id;
+public class MedicalSupplyFilterRequest {
 
     private String name;
 }

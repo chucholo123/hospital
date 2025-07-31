@@ -5,13 +5,10 @@ import com.hospital.backendHospital.exceptions.InvalidDataException;
 import com.hospital.backendHospital.mappers.DoctorMapper;
 import com.hospital.backendHospital.models.dto.doctor.CreateDoctorAndScheduleDto;
 import com.hospital.backendHospital.models.dto.doctor.DoctorResponseDto;
-import com.hospital.backendHospital.models.dto.doctor.UpdateDoctorDto;
+import com.hospital.backendHospital.models.dto.doctor.UpdateDoctorAndScheduleDto;
 import com.hospital.backendHospital.models.entity.*;
 import com.hospital.backendHospital.models.filters.DoctorFilterRequest;
-import com.hospital.backendHospital.repositories.DoctorRepository;
-import com.hospital.backendHospital.repositories.DoctorScheduleRepository;
-import com.hospital.backendHospital.repositories.SpecialtyRepository;
-import com.hospital.backendHospital.repositories.UserRepository;
+import com.hospital.backendHospital.repositories.*;
 import com.hospital.backendHospital.services.IDoctorService;
 import jakarta.persistence.criteria.Join;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +19,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +35,7 @@ public class DoctorService implements IDoctorService {
     private final DoctorScheduleRepository doctorScheduleRepository;
     private final UserRepository userRepository;
     private final SpecialtyRepository specialtyRepository;
+    private final RoleRepository roleRepository;
     private final DoctorMapper doctorMapper;
     private final PasswordEncoder passwordEncoder;
 
@@ -68,32 +70,39 @@ public class DoctorService implements IDoctorService {
                     cb.equal(root.get("isActive"), filter.getStatus()));
         }
 
+        if (filter.getRegisterDate() != null) {
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(root.get("registerDate"), filter.getRegisterDate()));
+        }
+
         return doctorRepository.findAll(spec, pageable)
                 .map(doctorMapper::toResponseDto);
     }
 
     @Override
     @Transactional
-    public DoctorResponseDto createDoctor(CreateDoctorAndScheduleDto createDoctorAndScheduleDto) {
-
-        Specialty specialty = specialtyRepository.findById(createDoctorAndScheduleDto.getSpecialty()).orElseThrow(()-> new EntityNotFoundException("Specialty not found"));
-
+    public DoctorResponseDto createDoctorAndSchedule(CreateDoctorAndScheduleDto createDoctorAndScheduleDto) {
         if (userRepository.existsByEmail(createDoctorAndScheduleDto.getEmail())){
-            throw new IllegalArgumentException("Email already exists");
+            throw new IllegalArgumentException("Doctor already exists");
         }
+
+        Role doctorRole = roleRepository.findByRoleEnum(RoleEnum.DOCTOR).orElseThrow(()-> new EntityNotFoundException("Role not found"));
+
+        Specialty specialty = specialtyRepository.findById(createDoctorAndScheduleDto.getSpecialtyId()).orElseThrow(()-> new EntityNotFoundException("Specialty not found"));
 
         User user = User.builder()
                 .email(createDoctorAndScheduleDto.getEmail())
                 .firstName(createDoctorAndScheduleDto.getFirstName())
                 .lastName(createDoctorAndScheduleDto.getLastName())
                 .password(passwordEncoder.encode(createDoctorAndScheduleDto.getPassword()))
-                .isActive(true)
+                .roles(Set.of(doctorRole))
                 .build();
 
         Doctor doctor = Doctor.builder()
                 .user(user)
                 .specialty(specialty)
-                .isActive(true)
+                .phoneNumber(createDoctorAndScheduleDto.getPhoneNumber())
+                .registerDate(LocalDate.now())
                 .build();
 
         doctorRepository.save(doctor);
@@ -127,32 +136,78 @@ public class DoctorService implements IDoctorService {
 
     @Override
     @Transactional
-    public DoctorResponseDto updateDoctor(Long id, UpdateDoctorDto updateDoctorDto) {
-
-        if (updateDoctorDto == null){
-            throw new InvalidDataException("UpdateDoctor cannot be null");
-        }
-
+    public DoctorResponseDto updateDoctorAndSchedule(Long id, UpdateDoctorAndScheduleDto updateDoctorAndScheduleDto) {
         Doctor doctor = doctorRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Doctor not found with id " + id));
 
-        if (updateDoctorDto.getFirstName() != null){
-            doctor.getUser().setFirstName(updateDoctorDto.getFirstName());
+        if (updateDoctorAndScheduleDto.getFirstName() != null){
+            doctor.getUser().setFirstName(updateDoctorAndScheduleDto.getFirstName());
         }
-        if (updateDoctorDto.getLastName() != null){
-            doctor.getUser().setLastName(updateDoctorDto.getLastName());
+        if (updateDoctorAndScheduleDto.getLastName() != null){
+            doctor.getUser().setLastName(updateDoctorAndScheduleDto.getLastName());
         }
-        if (updateDoctorDto.getNewPassword() != null){
-            doctor.getUser().setPassword(passwordEncoder.encode(updateDoctorDto.getNewPassword()));
+        if (updateDoctorAndScheduleDto.getNewPassword() != null){
+            doctor.getUser().setPassword(passwordEncoder.encode(updateDoctorAndScheduleDto.getNewPassword()));
+        }
+        if (updateDoctorAndScheduleDto.getSpecialtyId() != null){
+            Specialty specialty = specialtyRepository.findById(updateDoctorAndScheduleDto.getSpecialtyId()).orElseThrow(()-> new EntityNotFoundException("Specialty not found with id " + updateDoctorAndScheduleDto.getSpecialtyId()));
+            doctor.setSpecialty(specialty);
+        }
+        if (updateDoctorAndScheduleDto.getPhoneNumber() != null){
+            doctor.setPhoneNumber(updateDoctorAndScheduleDto.getPhoneNumber());
         }
 
         doctorRepository.save(doctor);
 
+        List<DoctorSchedule> currentSchedules = doctorScheduleRepository.findByDoctorId(doctor.getId());
+
+        // Convertir lista nueva a mapa por día
+        Map<DayOfWeek, UpdateDoctorAndScheduleDto.DoctorScheduleDto> newSchedulesMap = updateDoctorAndScheduleDto.getSchedules().stream()
+                .collect(Collectors.toMap(UpdateDoctorAndScheduleDto.DoctorScheduleDto::getDayOfWeek, s -> s));
+
+        // Actualizar o eliminar horarios existentes
+        for (DoctorSchedule existing : currentSchedules) {
+            UpdateDoctorAndScheduleDto.DoctorScheduleDto newDto = newSchedulesMap.remove(existing.getDayOfWeek()); // También lo elimina del mapa
+
+            if (newDto != null) {
+                // Verifica si hay cambios
+                if (!existing.getStartTime().equals(newDto.getStartTime()) ||
+                        !existing.getEndTime().equals(newDto.getEndTime())) {
+
+                    existing.setStartTime(newDto.getStartTime());
+                    existing.setEndTime(newDto.getEndTime());
+                    doctorScheduleRepository.save(existing);
+                }
+            } else {
+                // El horario ya no existe en los nuevos => eliminar
+                doctorScheduleRepository.delete(existing);
+            }
+        }
+
+        // Insertar los que no estaban antes (los que quedaron en el mapa)
+        for (UpdateDoctorAndScheduleDto.DoctorScheduleDto remaining : newSchedulesMap.values()) {
+            if (remaining.getStartTime().isAfter(LocalTime.of(22, 0))) {
+                throw new InvalidDataException("Start time must be before 22:00");
+            }
+
+            if (remaining.getEndTime().isBefore(remaining.getStartTime())) {
+                throw new InvalidDataException("End time must be after start time");
+            }
+
+            DoctorSchedule newSchedule = DoctorSchedule.builder()
+                    .doctor(doctor)
+                    .dayOfWeek(remaining.getDayOfWeek())
+                    .startTime(remaining.getStartTime())
+                    .endTime(remaining.getEndTime())
+                    .build();
+
+            doctorScheduleRepository.save(newSchedule);
+        }
         return doctorMapper.toResponseDto(doctor);
     }
 
     @Override
     @Transactional
-    public void desactiveDoctorById(Long id) {
+    public void deactivateDoctor(Long id) {
         Doctor doctor = doctorRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Doctor not found with id " + id));
 
         List<Appointment> appointments = doctor.getAppointments().stream()

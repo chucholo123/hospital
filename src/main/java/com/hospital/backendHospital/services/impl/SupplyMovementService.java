@@ -13,10 +13,12 @@ import com.hospital.backendHospital.repositories.MedicalSupplyRepository;
 import com.hospital.backendHospital.repositories.SupplyMovementRepository;
 import com.hospital.backendHospital.services.ISupplyMovementService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,34 +28,25 @@ public class SupplyMovementService implements ISupplyMovementService {
     private final MedicalSupplyRepository medicalSupplyRepository;
     private final SupplyMovementMapper supplyMovementMapper;
 
-    @Override
-    public List<SupplyMovementResponseDto> getAllMovements() {
-        List<SupplyMovement> supplyMovements = supplyMovementRepository.findAll();
 
-        return supplyMovementMapper.toListoDto(supplyMovements);
+    @Override
+    @Transactional(readOnly = true)
+    public Page<SupplyMovementResponseDto> getMovements(Pageable pageable) {
+        Page<SupplyMovement> supplyMovements = supplyMovementRepository.findAll(pageable);
+
+        return supplyMovementMapper.toListDto(supplyMovements);
     }
 
     @Override
-    public SupplyMovementResponseDto getMovementById(Long id) {
-        SupplyMovement supplyMovement = supplyMovementRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Supply movement not found"));
-
-        return supplyMovementMapper.toResponseDto(supplyMovement);
-    }
-
-    @Override
+    @Transactional
     public SupplyMovementResponseDto registerEntry(User user, CreateSupplyMovementDto createSupplyMovementDto) {
         MedicalSupply medicalSupply = medicalSupplyRepository.findById(createSupplyMovementDto.getSupplyId()).orElseThrow(()->
                 new EntityNotFoundException("Medical supply not found"));
-
-        if (createSupplyMovementDto.getQuantityChanged() <= 0) {
-            throw new InvalidDataException("Quantity must be positive");
-        }
 
         SupplyMovement supplyMovement = SupplyMovement.builder()
                 .supply(medicalSupply)
                 .type(MovementType.IN)
                 .quantityChanged(createSupplyMovementDto.getQuantityChanged())
-                .reason(createSupplyMovementDto.getReason())
                 .timestamp(LocalDateTime.now())
                 .performedBy(user)
                 .build();
@@ -67,23 +60,23 @@ public class SupplyMovementService implements ISupplyMovementService {
     }
 
     @Override
+    @Transactional
     public SupplyMovementResponseDto registerExit(User user, CreateSupplyMovementDto createSupplyMovementDto) {
         MedicalSupply medicalSupply = medicalSupplyRepository.findById(createSupplyMovementDto.getSupplyId()).orElseThrow(()->
                 new EntityNotFoundException("Medical supply not found"));
 
-        if (createSupplyMovementDto.getQuantityChanged() <= 0) {
-            throw new InvalidDataException("Quantity must be positive");
-        }
-
         if (createSupplyMovementDto.getQuantityChanged() > medicalSupply.getQuantity()){
             throw new InvalidDataException("This quantity exceeds the stock");
+        }
+
+        if (medicalSupply.getQuantity() - createSupplyMovementDto.getQuantityChanged() < medicalSupply.getMinimumStock()) {
+            throw new InvalidDataException("Amount exceeds the minimum stock");
         }
 
         SupplyMovement supplyMovement = SupplyMovement.builder()
                 .supply(medicalSupply)
                 .type(MovementType.OUT)
                 .quantityChanged(createSupplyMovementDto.getQuantityChanged())
-                .reason(createSupplyMovementDto.getReason())
                 .timestamp(LocalDateTime.now())
                 .performedBy(user)
                 .build();
@@ -94,12 +87,5 @@ public class SupplyMovementService implements ISupplyMovementService {
         medicalSupplyRepository.save(medicalSupply);
 
         return supplyMovementMapper.toResponseDto(supplyMovement);
-    }
-
-    @Override
-    public List<SupplyMovementResponseDto> getMovementsBySupply(Long supplyId) {
-        List<SupplyMovement> supplyMovements = supplyMovementRepository.findAllBySupplyId(supplyId);
-
-        return supplyMovementMapper.toListoDto(supplyMovements);
     }
 }

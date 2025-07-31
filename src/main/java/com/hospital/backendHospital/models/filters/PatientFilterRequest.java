@@ -11,15 +11,13 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DoctorFilterRequest {
+public class PatientFilterRequest {
 
-    String firstName;
+    private String bloodType;
 
-    String lastName;
+    private Boolean status;
 
-    Boolean status;
+    private LocalDate registerDate;
 
-    String specialty;
-
-    LocalDate registerDate;
+    private Boolean hospitalized;
 }

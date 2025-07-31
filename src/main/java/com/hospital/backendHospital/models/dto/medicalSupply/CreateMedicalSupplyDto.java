@@ -1,5 +1,6 @@
 package com.hospital.backendHospital.models.dto.medicalSupply;
 
+import com.hospital.backendHospital.models.entity.UnityEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -19,9 +20,6 @@ public class CreateMedicalSupplyDto {
     @NotBlank(message = "Name is required")
     private String name;
 
-    @NotBlank(message = "Description is required")
-    private String description;
-
     @NotNull(message = "Quantity is required")
     @Positive(message = "Quantity must be valid")
     private int quantity;
@@ -30,11 +28,6 @@ public class CreateMedicalSupplyDto {
     @Positive(message = "Minimum stock must be valid")
     private int minimumStock;
 
-    @NotNull(message = "Unit cost is required")
-    @Positive(message = "Unit cost must be valid")
-    private BigDecimal unitCost;
-
-    @NotNull(message = "Category is required")
-    @Positive(message = "Category must be valid")
-    private Long categoryId;
+    @NotNull(message = "Unity is required")
+    private UnityEnum unity;
 }

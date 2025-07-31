@@ -49,8 +49,9 @@ public class SpecialtyService implements ISpecialtyService {
         }
 
         Specialty specialty = specialtyMapper.toEntity(createSpecialtyDto);
-        Specialty savedSpecialty = specialtyRepository.save(specialty);
+        specialty.setActive(true);
+        specialtyRepository.save(specialty);
 
-        return specialtyMapper.toResponseDto(savedSpecialty);
+        return specialtyMapper.toResponseDto(specialty);
     }
 }

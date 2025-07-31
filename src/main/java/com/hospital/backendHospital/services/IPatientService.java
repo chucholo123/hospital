@@ -6,18 +6,19 @@ import com.hospital.backendHospital.models.dto.patient.PatientSummaryDto;
 import com.hospital.backendHospital.models.dto.patient.UpdatePatientDto;
 import com.hospital.backendHospital.models.entity.Patient;
 import com.hospital.backendHospital.models.entity.User;
+import com.hospital.backendHospital.models.filters.PatientFilterRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface IPatientService {
 
-    List<PatientResponseDto> listPatients();
+    Page<PatientResponseDto> filterPatients(PatientFilterRequest filter, Pageable pageable);
 
-    List<PatientSummaryDto> listPatientsByFirstName(String firstName);
-
-    PatientResponseDto createPatient(CreatePatientDto createPatientDto);
+    PatientResponseDto createPatient(User user, CreatePatientDto createPatientDto);
 
     PatientResponseDto updatePatient(User user, UpdatePatientDto updatePatientDto);
 
-    void desactivePatientById(Long id);
+    void deactivatePatient(Long id);
 }

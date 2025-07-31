@@ -11,15 +11,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DoctorFilterRequest {
+public class HospitalizationFilterRequest {
 
-    String firstName;
+    private LocalDate date;
 
-    String lastName;
+    private Long patientId;
 
-    Boolean status;
+    private Long doctorId;
 
-    String specialty;
+    private Long roomId;
 
-    LocalDate registerDate;
+    private String status;
 }

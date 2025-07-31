@@ -9,12 +9,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
 @SpringBootApplication
+@EnableSpringDataWebSupport(pageSerializationMode =  EnableSpringDataWebSupport.PageSerializationMode.VIA_DTO)
 public class BackendHospitalApplication {
 
 	public static void main(String[] args) {
@@ -44,7 +46,7 @@ public class BackendHospitalApplication {
 			Role roleDoctor = createRoleIfNotExists(roleRepository, RoleEnum.DOCTOR,
 					Set.of(createPermission, readPermission, updatePermission));
 
-			Role roleRecepcionist = createRoleIfNotExists(roleRepository, RoleEnum.RECEPCIONIST,
+			Role roleRecepcionist = createRoleIfNotExists(roleRepository, RoleEnum.RECEPTIONIST,
 					Set.of(createPermission, readPermission));
 
 			Role rolePatient = createRoleIfNotExists(roleRepository, RoleEnum.PATIENT,
@@ -91,7 +93,6 @@ public class BackendHospitalApplication {
 					.firstName(firstName)
 					.lastName(lastName)
 					.password(encoder.encode(password))
-					.isActive(true)
 					.build();
 			User savedUser = repository.save(user);
 			// Establecer rol después de guardar el usuario

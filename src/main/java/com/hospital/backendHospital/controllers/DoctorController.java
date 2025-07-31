@@ -3,8 +3,7 @@ package com.hospital.backendHospital.controllers;
 import com.hospital.backendHospital.auth.service.AuthService;
 import com.hospital.backendHospital.models.dto.doctor.CreateDoctorAndScheduleDto;
 import com.hospital.backendHospital.models.dto.doctor.DoctorResponseDto;
-import com.hospital.backendHospital.models.dto.doctor.UpdateDoctorDto;
-import com.hospital.backendHospital.models.entity.User;
+import com.hospital.backendHospital.models.dto.doctor.UpdateDoctorAndScheduleDto;
 import com.hospital.backendHospital.models.filters.DoctorFilterRequest;
 import com.hospital.backendHospital.services.IDoctorService;
 import jakarta.validation.Valid;
@@ -25,29 +24,27 @@ public class DoctorController {
     private final AuthService authService;
 
     @GetMapping
-    public ResponseEntity<Page<DoctorResponseDto>> filterDoctors
-            (DoctorFilterRequest filter, @PageableDefault(page = 0, size = 5) Pageable pageable){
+    public ResponseEntity<Page<DoctorResponseDto>> filterDoctors(DoctorFilterRequest filter, @PageableDefault(page = 0, size = 5) Pageable pageable){
         Page<DoctorResponseDto> doctors = doctorService.filterDoctors(filter, pageable);
 
         return ResponseEntity.ok(doctors);
     }
 
     @PostMapping
-    public ResponseEntity<DoctorResponseDto> createDoctor(@Valid @RequestBody CreateDoctorAndScheduleDto createDoctorAndScheduleDto){
-        DoctorResponseDto doctorResponseDto = doctorService.createDoctor(createDoctorAndScheduleDto);
+    public ResponseEntity<DoctorResponseDto> createDoctorAndSchedule(@Valid @RequestBody CreateDoctorAndScheduleDto createDoctorAndScheduleDto){
+        DoctorResponseDto doctorResponseDto = doctorService.createDoctorAndSchedule(createDoctorAndScheduleDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(doctorResponseDto);
     }
 
-    @PatchMapping("/update/me")
-    public ResponseEntity<DoctorResponseDto> updateDoctor(@Valid @RequestBody UpdateDoctorDto updateDoctorDto){
-        User user = authService.getAuthenticatedUser();
-        DoctorResponseDto doctorResponseDto = doctorService.updateDoctor(user.getId(), updateDoctorDto);
+    @PatchMapping("/{id}/update")
+    public ResponseEntity<DoctorResponseDto> updateDoctor(@PathVariable Long id, @Valid @RequestBody UpdateDoctorAndScheduleDto updateDoctorAndScheduleDto){
+        DoctorResponseDto doctorResponseDto = doctorService.updateDoctorAndSchedule(id, updateDoctorAndScheduleDto);
         return ResponseEntity.ok(doctorResponseDto);
     }
 
-    @PatchMapping("/{id}/desactive")
-    public ResponseEntity<Void> desactiveDoctor(@PathVariable Long id){
-        doctorService.desactiveDoctorById(id);
+    @PatchMapping("/{id}/deactivate")
+    public ResponseEntity<Void> deactivateDoctor(@PathVariable Long id){
+        doctorService.deactivateDoctor(id);
         return ResponseEntity.noContent().build();
     }
 }

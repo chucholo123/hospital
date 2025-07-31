@@ -31,6 +31,10 @@ public class Specialty {
     @Column(nullable = false)
     private BigDecimal cost;
 
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean active = true;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "specialty")
     private List<Doctor> doctor = new ArrayList<>();
 }

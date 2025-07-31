@@ -17,31 +17,23 @@ public class PatientResponseDto {
 
     private String lastName;
 
+    private String email;
+
+    private String phoneNumber;
+
+    private String address;
+
     private LocalDate dateOfBirth;
 
     private String gender;
 
-    private String maritalStatus;
-
-    private String address;
-
-    private String phoneNumber;
-
     private String allergies;
+
+    private String bloodType;
 
     private String chronicDiseases;
 
     private String currentMedications;
-
-    private Double height;
-
-    private Double weight;
-
-    private Boolean isSmoker;
-
-    private String insuranceProvider;
-
-    private String insuranceNumber;
 
     private String emergencyContact;
 
@@ -49,7 +41,13 @@ public class PatientResponseDto {
 
     private String emergencyContactRelation;
 
-    private String bloodType;
+    private Double height;
 
-    private boolean isActive;
+    private Double weight;
+
+    private LocalDate registerDate;
+
+    private boolean smoker;
+
+    private boolean active;
 }

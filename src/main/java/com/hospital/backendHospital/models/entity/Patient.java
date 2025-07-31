@@ -26,44 +26,29 @@ public class Patient {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
+
+    @Column(nullable = false)
+    private String address;
+
     @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
 
     @Column(nullable = false)
     private String gender;
 
-    @Column(name = "marital_status", nullable = false)
-    private String maritalStatus;
-
-    @Column(nullable = false)
-    private String address;
-
-    @Column(name = "phone_number", nullable = false)
-    private String phoneNumber;
-
     @Column(nullable = false)
     private String allergies;
+
+    @Column(name = "blood_type", nullable = false)
+    private String bloodType;
 
     @Column(name = "chronic_diseases", nullable = false)
     private String chronicDiseases;
 
     @Column(name = "current_medications", nullable = false)
     private String currentMedications;
-
-    @Column(nullable = false)
-    private Double height;
-
-    @Column(nullable = false)
-    private Double weight;
-
-    @Column(name = "is_smoker", nullable = false)
-    private Boolean isSmoker;
-
-    @Column(name = "insurance_provider", nullable = false)
-    private String insuranceProvider;
-
-    @Column(name = "insurance_number", nullable = false)
-    private String insuranceNumber;
 
     @Column(name = "emergency_contact", nullable = false)
     private String emergencyContact;
@@ -74,11 +59,21 @@ public class Patient {
     @Column(name = "emergency_contact_relation", nullable = false)
     private String emergencyContactRelation;
 
-    @Column(name = "blood_type", nullable = false)
-    private String bloodType;
+    @Column(nullable = false)
+    private Double height;
 
-    @Column(name = "is_active", nullable = false)
-    private boolean isActive = true;
+    @Column(nullable = false)
+    private Double weight;
+
+    @Column(name = "register_date", nullable = false)
+    private LocalDate registerDate;
+
+    @Column(nullable = false)
+    private boolean smoker;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean active = true;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "patient")
     private List<Appointment> appointments = new ArrayList<>();

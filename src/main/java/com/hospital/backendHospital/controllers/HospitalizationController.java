@@ -2,9 +2,13 @@ package com.hospital.backendHospital.controllers;
 
 import com.hospital.backendHospital.models.dto.hospitalization.CreateHospitalizationDto;
 import com.hospital.backendHospital.models.dto.hospitalization.HospitalizationResponseDto;
+import com.hospital.backendHospital.models.filters.HospitalizationFilterRequest;
 import com.hospital.backendHospital.services.IHospitalzationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +21,11 @@ public class HospitalizationController {
     private final IHospitalzationService hospitalizationService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<HospitalizationResponseDto> getHospitalizationById(@PathVariable Long id) {
-        HospitalizationResponseDto response = hospitalizationService.listHospitalizationByPatientId(id);
+    public ResponseEntity<Page<HospitalizationResponseDto>> getHospitalizationById
+            (HospitalizationFilterRequest filter, @PageableDefault(page = 0, size = 5, sort = "admissionDate") Pageable pageable) {
+        Page<HospitalizationResponseDto> hospitalizations = hospitalizationService.filterHospitalization(filter, pageable);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(hospitalizations);
     }
 
     @PostMapping

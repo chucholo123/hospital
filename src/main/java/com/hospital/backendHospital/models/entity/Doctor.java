@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +33,12 @@ public class Doctor {
     @JoinColumn(name = "specialty_id", nullable = false)
     private Specialty specialty;
 
-    @Column(name = "is_active", nullable = false)
-    private boolean isActive = true;
+    @Column(name = "register_date", nullable = false)
+    private LocalDate registerDate;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean active = true;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "doctor")
     private List<Appointment> appointments = new ArrayList<>();

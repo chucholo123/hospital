@@ -22,8 +22,9 @@ public class Room {
     private String name;
 
     @Column(nullable = false)
-    private boolean isAvailable;
+    private int capacity;
 
     @Column(nullable = false)
-    private int capacity;
+    @Builder.Default
+    private boolean available = true;
 }

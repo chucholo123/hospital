@@ -13,10 +13,6 @@ public interface PatientMapper {
 
     @Mapping(target = "firstName", source = "user.firstName")
     @Mapping(target = "lastName", source = "user.lastName")
-    @Mapping(target = "isActive", source = "active")
+    @Mapping(target = "email", source = "user.email")
     PatientResponseDto toResponseDto(Patient patient);
-
-    List<PatientSummaryDto> toListSummaryDtos(List<Patient> patients);
-
-    List<PatientResponseDto> toListDtos(List<Patient> patients);
 }

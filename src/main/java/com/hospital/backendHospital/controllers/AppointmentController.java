@@ -25,8 +25,8 @@ public class AppointmentController {
 
     @GetMapping
     public ResponseEntity<Page<AppointmentResponseDto>> filterAppointments
-            (AppointmentFilterRequest filterRequest,@PageableDefault(page = 0, size = 10, sort = "date") Pageable pageable){
-        Page<AppointmentResponseDto> result = appointmentService.filterAppointments(filterRequest, pageable);
+            (AppointmentFilterRequest filter,@PageableDefault(page = 0, size = 10, sort = "date") Pageable pageable){
+        Page<AppointmentResponseDto> result = appointmentService.filterAppointments(filter, pageable);
 
         return ResponseEntity.ok(result);
     }

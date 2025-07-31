@@ -13,7 +13,7 @@ public class RoomResponseDto {
 
     private String name;
 
-    private boolean isAvailable;
-
     private int capacity;
+
+    private boolean available;
 }

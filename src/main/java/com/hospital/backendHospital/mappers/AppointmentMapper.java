@@ -13,6 +13,4 @@ public interface AppointmentMapper {
     @Mapping(target = "patientName", source = "patient.user.firstName")
     @Mapping(target = "doctorName", source = "doctor.user.firstName")
     AppointmentResponseDto toResponseDto(Appointment appointment);
-
-    List<AppointmentResponseDto> toListAppointments(List<Appointment> appointments);
 }

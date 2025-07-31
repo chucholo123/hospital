@@ -24,21 +24,16 @@ public class MedicalSupply {
     private String name;
 
     @Column(nullable = false)
-    private String description;
-
-    @Column(nullable = false)
     private int quantity;
 
     @Column(name = "minimum_stock", nullable = false)
     private int minimumStock;
 
-    @Column(name = "unit_cost", nullable = false)
-    private BigDecimal unitCost;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UnityEnum unity;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
-    private SupplyCategory category;
-
-    @Column(name = "is_active", nullable = false)
-    private boolean isActive;
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean active = true;
 }

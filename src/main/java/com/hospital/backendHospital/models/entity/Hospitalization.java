@@ -26,6 +26,10 @@ public class Hospitalization {
     private Patient patient;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private Doctor doctor;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
@@ -38,9 +42,7 @@ public class Hospitalization {
     @Column(nullable = false)
     private String reason;
 
-    @Column(name = "cost_per_day", nullable = false)
-    private BigDecimal costPerDay;
-
-    @Column(name = "is_active", nullable = false)
-    private boolean isActive;
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean active = true;
 }

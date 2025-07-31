@@ -32,6 +32,7 @@ public class AppointmentService implements IAppointmentService {
     private final AppointmentMapper appointmentMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public Page<AppointmentResponseDto> filterAppointments(AppointmentFilterRequest filter, Pageable pageable) {
         Specification<Appointment> spec = Specification.where(null);
 
@@ -60,6 +61,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<AppointmentResponseDto> listAppointmentsByPatient(User user, Pageable pageable) {
         Patient patient = patientRepository.findByUser(user).orElseThrow(()-> new EntityNotFoundException("Patient not found"));
 
@@ -73,6 +75,7 @@ public class AppointmentService implements IAppointmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AppointmentResponseDto listActiveAppointmentByPatient(User user) {
         Patient patient = patientRepository.findByUser(user).orElseThrow(()-> new EntityNotFoundException("Patient not found"));
 

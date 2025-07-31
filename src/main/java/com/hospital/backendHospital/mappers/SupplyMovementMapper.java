@@ -4,6 +4,7 @@ import com.hospital.backendHospital.models.dto.supplyMovement.SupplyMovementResp
 import com.hospital.backendHospital.models.entity.SupplyMovement;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -14,5 +15,7 @@ public interface SupplyMovementMapper {
     @Mapping(target = "performedBy", source = "performedBy.firstName")
     SupplyMovementResponseDto toResponseDto(SupplyMovement supplyMovement);
 
-    List<SupplyMovementResponseDto> toListoDto(List<SupplyMovement> supplyMovements);
+    default Page<SupplyMovementResponseDto> toListDto(Page<SupplyMovement> supplyMovements){
+        return supplyMovements.map(this::toResponseDto);
+    }
 }

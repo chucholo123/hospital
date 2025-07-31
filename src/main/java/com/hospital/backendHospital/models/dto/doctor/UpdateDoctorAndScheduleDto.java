@@ -15,33 +15,26 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateDoctorAndScheduleDto {
+public class UpdateDoctorAndScheduleDto {
 
     @Email(message = "Email must be valid")
-    @NotBlank(message = "Email is required")
     private String email;
 
     @Size(min = 3, max = 30, message = "First name must be between 3 and 30 characters")
-    @NotBlank(message = "Username is required")
     private String firstName;
 
     @Size(min = 5, max = 30, message = "Last name must be between 5 and 30 characters")
-    @NotBlank(message = "Last name is required")
     private String lastName;
 
     @Size(min = 8, message = "The password must be at least 8 characters")
-    @NotBlank(message = "Password is required")
-    private String password;
+    private String newPassword;
 
-    @NotNull(message = "Specialty is required")
     @Positive(message = "Specialty must be valid")
     private Long specialtyId;
 
-    @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^\\d{10}$", message = "Phone number must be valid")
     private String phoneNumber;
 
-    @NotNull(message = "Schedule is required")
     private Set<DoctorScheduleDto> schedules;
 
     @Data
