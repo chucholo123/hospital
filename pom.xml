@@ -27,6 +27,7 @@
 		<url/>
 	</scm>
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
@@ -50,7 +51,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -103,6 +103,18 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.12.5</version>
 		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.10.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<version>5.10.0</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -123,8 +135,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>17</source> <!-- Ajusta si usas Java 21 u otra versión -->
-					<target>17</target>
+					<source>21</source>
+					<target>21</target>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.mapstruct</groupId>
@@ -144,7 +156,58 @@
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.12</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>**/dto/**</exclude>
+								<exclude>**/filters/**</exclude>
+								<exclude>**/entity/**</exclude>
+								<exclude>**/mappers/**</exclude>
+								<exclude>**/config/**</exclude>
+								<exclude>**/exceptions/**</exclude>
+								<exclude>**/token/**</exclude>
+								<exclude>**/auth/repository/**</exclude>
+								<exclude>**/models/**/dto/**</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>jacoco-check</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<rule>
+									<element>PACKAGE</element>
+									<limits>
+										<limit>
+											<counter>LINE</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.95</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 

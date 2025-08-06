@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -42,7 +43,7 @@ public class CreateDoctorAndScheduleDto {
     private String phoneNumber;
 
     @NotNull(message = "Schedule is required")
-    private Set<DoctorScheduleDto> schedules;
+    private List<DoctorScheduleDto> schedules;
 
     @Data
     public static class DoctorScheduleDto {

@@ -97,10 +97,6 @@ public class PatientService implements IPatientService {
     @Override
     @Transactional
     public PatientResponseDto updatePatient(User user, UpdatePatientDto updatePatientDto) {
-        if (updatePatientDto == null) {
-            throw new IllegalArgumentException("UpdatePatient cannot be null");
-        }
-
         Patient patient = patientRepository.findByUser(user).orElseThrow(()-> new EntityNotFoundException("Patient not found"));
 
         if (updatePatientDto.getFirstName() != null){
@@ -130,7 +126,7 @@ public class PatientService implements IPatientService {
                         .filter(appointment -> appointment.getDate().isAfter(LocalDate.now()))
                         .toList();
 
-        if (appointments.isEmpty()){
+        if (!appointments.isEmpty()){
             throw new InvalidDataException("Patient " + patient.getUser().getFirstName() + " cannot be deactivated because he has scheduled appointments");
         }
 

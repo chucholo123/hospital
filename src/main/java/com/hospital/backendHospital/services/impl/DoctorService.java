@@ -58,7 +58,7 @@ public class DoctorService implements IDoctorService {
             });
         }
 
-        if (filter.getSpecialty() != null && !filter.getSpecialty().isBlank()) {
+        if (filter.getSpecialty() != null) {
             spec = spec.and((root, query, cb) -> {
                 Join<Object, Object> specialtyJoin = root.join("specialty");
                 return cb.equal(cb.lower(specialtyJoin.get("name")), filter.getSpecialty().toLowerCase());
