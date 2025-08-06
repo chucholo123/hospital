@@ -34,6 +34,7 @@ public class PatientService implements IPatientService {
     private final PatientMapper patientMapper;
     private final PasswordEncoder passwordEncoder;
 
+
     @Override
     @Transactional(readOnly = true)
     public Page<PatientResponseDto> filterPatients(PatientFilterRequest filter, Pageable pageable) {
