@@ -183,7 +183,7 @@ public class DoctorService implements IDoctorService {
             }
         }
 
-        // Insertar los que no estaban antes (los que quedaron en el mapa)
+        // Insertar los que no estaban antes
         for (UpdateDoctorAndScheduleDto.DoctorScheduleDto remaining : newSchedulesMap.values()) {
             if (remaining.getStartTime().isAfter(LocalTime.of(22, 0))) {
                 throw new InvalidDataException("Start time must be before 22:00");
