@@ -51,10 +51,6 @@ public class SecurityConfig {
 
                     //RECEPTIONIST CONTROLLER
                     http.requestMatchers("/api/v1/receptionists/**").hasRole("ADMIN");
-//                    http.requestMatchers(HttpMethod.GET, "/api/v1/receptionists").hasRole("ADMIN");
-//                    http.requestMatchers(HttpMethod.POST, "/api/v1/receptionists/create-receptionist").hasRole("ADMIN");
-//                    http.requestMatchers(HttpMethod.PATCH, "/api/v1/receptionists/{id}/update").hasRole("ADMIN");
-//                    http.requestMatchers(HttpMethod.PATCH, "/api/v1/receptionists/{id}/deactivate").hasRole("ADMIN");
 
                     // PATIENT CONTROLLER
                     http.requestMatchers(HttpMethod.GET, "/api/v1/patients").hasAnyRole("ADMIN", "DOCTOR");
@@ -99,6 +95,8 @@ public class SecurityConfig {
 
                     // SUPPLY MOVEMENTS
                     http.requestMatchers("/api/v1/supplyMovements/**").hasRole("ADMIN");
+
+                    http.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
 
                     // Cualquier otra solicitud requiere autenticación
                     http.anyRequest().authenticated();

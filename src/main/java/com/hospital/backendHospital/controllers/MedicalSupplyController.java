@@ -13,12 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/medicalSupplies")
+@RequestMapping("/api/v1/medicalSupplies")
 public class MedicalSupplyController {
 
     private final IMedicalSupplyService medicalSupplyService;
