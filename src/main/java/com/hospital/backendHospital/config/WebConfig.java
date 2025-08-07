@@ -13,7 +13,7 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // Aplica a todas las rutas
+                registry.addMapping("http://enchanting-growth-production.up.railway.app") // Aplica a todas las rutas
                         .allowedOrigins("*") // Cambia por el dominio frontend si es necesario
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*");
