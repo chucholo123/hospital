@@ -67,10 +67,6 @@ public class PatientService implements IPatientService {
     @Override
     @Transactional
     public PatientResponseDto createPatient(User user, CreatePatientDto createPatientDto) {
-        if (userRepository.existsByEmail(user.getEmail())){
-            throw new InvalidDataException("Patient already exists");
-        }
-
         Patient patient = Patient.builder()
                 .user(user)
                 .phoneNumber(createPatientDto.getPhoneNumber())
