@@ -95,7 +95,7 @@ public class SecurityConfig {
                     http.requestMatchers(HttpMethod.POST, "/api/v1/medicalRecords").hasRole("DOCTOR");
 
                     // MEDICAL SUPPLIES
-                    http.requestMatchers("/api/v1/medicalSupplies/**").hasRole("ADMIN");
+                    http.requestMatchers("/api/v1/medicalSupplies/**").hasAnyRole();
 
                     // SUPPLY MOVEMENTS
                     http.requestMatchers("/api/v1/supplyMovements/**").hasRole("ADMIN");
@@ -113,7 +113,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://enchanting-growth-production.up.railway.app", "http://localhost:3000")); // o "*" si estás en pruebas
+        configuration.setAllowedOrigins(List.of("http://enchanting-growth-production.up.railway.app", "http://localhost:8080")); // o "*" si estás en pruebas
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
