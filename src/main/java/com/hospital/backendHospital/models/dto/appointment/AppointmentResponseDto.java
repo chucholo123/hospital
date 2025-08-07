@@ -16,6 +16,8 @@ import java.time.LocalTime;
 @Builder
 public class AppointmentResponseDto {
 
+    private Long id;
+
     private String patientName;
 
     private String doctorName;
