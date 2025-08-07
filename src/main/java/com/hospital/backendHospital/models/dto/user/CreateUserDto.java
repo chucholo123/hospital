@@ -18,11 +18,11 @@ public class CreateUserDto {
     @NotBlank(message = "Email is required")
     private String email;
 
-    @Size(min = 10, max = 30, message = "First name must be between 5 and 20 characters")
+    @Size(min = 5, max = 20, message = "First name must be between 5 and 20 characters")
     @NotBlank(message = "First name is required")
     private String firstName;
 
-    @Size(min = 10, max = 30, message = "Last name must be between 5 and 20 characters")
+    @Size(min = 5, max = 20, message = "Last name must be between 5 and 20 characters")
     @NotBlank(message = "Last name is required")
     private String lastName;
 
