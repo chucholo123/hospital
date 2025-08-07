@@ -65,7 +65,7 @@ class DoctorServiceTest {
                 .email("test@example.com")
                 .firstName("John")
                 .lastName("Doe")
-                .password("securepassword")
+                .password("encoded")
                 .specialtyId(1L)
                 .phoneNumber("7771234567")
                 .schedules(List.of(scheduleDto))
@@ -170,8 +170,10 @@ class DoctorServiceTest {
         DoctorResponseDto result = doctorService.createDoctorAndSchedule(createDto);
 
         assertNotNull(result);
+        verify(passwordEncoder).encode(createDto.getPassword());
         verify(doctorRepository).save(any());
-        verify(doctorScheduleRepository).save(any());
+        verify(doctorScheduleRepository, times(createDto.getSchedules().size())).save(any());
+        verify(doctorMapper).toResponseDto(any());
     }
 
     @Test
