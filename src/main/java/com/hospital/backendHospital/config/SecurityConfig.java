@@ -91,7 +91,7 @@ public class SecurityConfig {
                     http.requestMatchers(HttpMethod.POST, "/api/v1/medicalRecords").hasRole("DOCTOR");
 
                     // MEDICAL SUPPLIES
-                    http.requestMatchers("/api/v1/medicalSupplies/**").permitAll();
+                    http.requestMatchers("/api/v1/medicalSupplies/**").hasRole("ADMIN");
 
                     // SUPPLY MOVEMENTS
                     http.requestMatchers("/api/v1/supplyMovements/**").hasRole("ADMIN");
