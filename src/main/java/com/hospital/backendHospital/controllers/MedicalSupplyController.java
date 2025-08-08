@@ -28,7 +28,7 @@ public class MedicalSupplyController {
         return ResponseEntity.ok(medicalSupplies);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<MedicalSupplyResponseDto> createSupply(@Valid @RequestBody CreateMedicalSupplyDto createMedicalSupplyDto){
         log.info(String.valueOf(createMedicalSupplyDto));
         MedicalSupplyResponseDto medicalSupply = medicalSupplyService.createSupply(createMedicalSupplyDto);
