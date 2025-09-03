@@ -34,6 +34,10 @@ public class ReceptionistService implements IReceptionistService {
     public List<ReceptionistResponseDto> getReceptionists() {
         List<User> receptionists = userRepository.findByRoles_RoleEnum(RoleEnum.RECEPTIONIST);
 
+        if (receptionists.isEmpty()) {
+            throw new EntityNotFoundException("There is not receptionists yet");
+        }
+
         return receptionistMapper.toListDto(receptionists);
     }
 

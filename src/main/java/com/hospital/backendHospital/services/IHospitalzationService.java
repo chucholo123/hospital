@@ -12,5 +12,5 @@ public interface IHospitalzationService {
 
     HospitalizationResponseDto createHospitalization(CreateHospitalizationDto createHospitalizationDto);
 
-    void setDischargeDateById(Long id);
+    void dischargeDateById(Long id);
 }

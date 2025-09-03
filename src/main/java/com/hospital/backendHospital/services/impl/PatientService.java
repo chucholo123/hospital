@@ -30,7 +30,6 @@ import java.util.List;
 public class PatientService implements IPatientService {
 
     private final PatientRepository patientRepository;
-    private final UserRepository userRepository;
     private final PatientMapper patientMapper;
     private final PasswordEncoder passwordEncoder;
 

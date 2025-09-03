@@ -37,7 +37,7 @@ public class HospitalizationController {
 
     @PatchMapping("/{id}/discharge")
     public ResponseEntity<Void> dischargePatient(@PathVariable Long id) {
-        hospitalizationService.setDischargeDateById(id);
+        hospitalizationService.dischargeDateById(id);
 
         return ResponseEntity.noContent().build();
     }

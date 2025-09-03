@@ -101,8 +101,8 @@ public class HospitalizationService implements IHospitalzationService {
 
     @Override
     @Transactional
-    public void setDischargeDateById(Long id) {
-        Hospitalization hospitalization = hospitalizationRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Hospitalzation not found"));
+    public void dischargeDateById(Long id) {
+        Hospitalization hospitalization = hospitalizationRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Hospitalization not found"));
 
         hospitalization.setDischargeDate(LocalDate.now());
         hospitalization.setActive(false);

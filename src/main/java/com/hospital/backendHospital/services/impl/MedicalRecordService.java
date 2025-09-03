@@ -54,15 +54,12 @@ public class MedicalRecordService implements IMedicalRecordService {
     public MedicalRecordResponseDto listMedicalRecordByAppointmentId(Long id) {
         Appointment appointment = appointmentRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Appointment not found with id " + id));
 
-        MedicalRecord medicalRecord = medicalRecordRepository.findByAppointmentId(appointment.getId());
-
-        if (medicalRecord == null){
-            throw new EntityNotFoundException("Medical record not found");
-        }
+        MedicalRecord medicalRecord = medicalRecordRepository.findByAppointmentId(appointment.getId()).orElseThrow(()-> new EntityNotFoundException("Medical record not found"));
 
         return medicalRecordMapper.toResponseDto(medicalRecord);
     }
 
+    // Considerar crear historial medico solo para citas completadas
     @Override
     @Transactional
     public MedicalRecordResponseDto createMedicalRecord(CreateMedicalRecordDto createMedicalRecordDto) {

@@ -11,7 +11,6 @@ import com.hospital.backendHospital.models.entity.Patient;
 import com.hospital.backendHospital.models.entity.User;
 import com.hospital.backendHospital.models.filters.PatientFilterRequest;
 import com.hospital.backendHospital.repositories.PatientRepository;
-import com.hospital.backendHospital.repositories.UserRepository;
 import com.hospital.backendHospital.services.impl.PatientService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +38,6 @@ import static org.mockito.Mockito.*;
 public class PatientServiceTest {
 
     @Mock private PatientRepository patientRepository;
-    @Mock private UserRepository userRepository;
     @Mock private PatientMapper patientMapper;
     @Mock private PasswordEncoder passwordEncoder;
 
@@ -171,7 +169,6 @@ public class PatientServiceTest {
 
     @Test
     void testCreatePatient() {
-        when(userRepository.existsByEmail(user.getEmail())).thenReturn(false);
         when(patientRepository.save(any())).thenReturn(patient);
         when(patientMapper.toResponseDto(any())).thenReturn(new PatientResponseDto());
 
@@ -181,13 +178,6 @@ public class PatientServiceTest {
         verify(patientRepository).save(any());
     }
 
-    @Test
-    void shouldThrowIfEmailAlreadyExists() {
-        when(userRepository.existsByEmail(user.getEmail())).thenReturn(true);
-
-        assertThrows(InvalidDataException.class,
-                () -> patientService.createPatient(user, createDto));
-    }
 
     @Test
     void testUpdatePatient() {
@@ -277,12 +267,12 @@ public class PatientServiceTest {
     }
 
     @Test
-    void testDeactivatePatient_shouldThrowWhenPatientHasNoFutureAppointments() {
+    void testDeactivatePatient_shouldThrowWhenPatientHasFutureAppointments() {
         // Arrange
         Appointment appointment = new Appointment();
         appointment.setDate(LocalDate.now().plusDays(1));
 
-        patient.setAppointments(List.of(appointment)); // sin citas futuras
+        patient.setAppointments(List.of(appointment));
 
         when(patientRepository.findById(1L)).thenReturn(Optional.of(patient));
 

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateMedicalRecordDto {
+public class  CreateMedicalRecordDto {
 
     @NotNull(message = "Patient is required")
     private Long patientId;

@@ -21,5 +21,5 @@ public class HospitalizationFilterRequest {
 
     private Long roomId;
 
-    private String status;
+    private Boolean status;
 }

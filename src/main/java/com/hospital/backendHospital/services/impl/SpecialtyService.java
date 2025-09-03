@@ -32,11 +32,7 @@ public class SpecialtyService implements ISpecialtyService {
     @Override
     @Transactional(readOnly = true)
     public SpecialtyResponseDto listSpecialtyByName(String name) {
-        Specialty specialty = specialtyRepository.findByName(name);
-
-        if (specialty == null){
-            throw new EntityNotFoundException("Specialty not found");
-        }
+        Specialty specialty = specialtyRepository.findByName(name).orElseThrow(()-> new EntityNotFoundException("Specialty not found"));
 
         return specialtyMapper.toResponseDto(specialty);
     }
@@ -49,7 +45,6 @@ public class SpecialtyService implements ISpecialtyService {
         }
 
         Specialty specialty = specialtyMapper.toEntity(createSpecialtyDto);
-        specialty.setActive(true);
         specialtyRepository.save(specialty);
 
         return specialtyMapper.toResponseDto(specialty);
