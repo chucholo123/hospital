@@ -1,6 +1,7 @@
 package com.hospital.backendHospital.models.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -15,9 +16,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "file_entity")
+@Table(name = "files")
 public class FileEntity {
 
+    @Id
     private UUID id;
 
     private String name;
