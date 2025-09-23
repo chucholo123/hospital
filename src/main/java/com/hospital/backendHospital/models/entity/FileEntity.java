@@ -1,9 +1,6 @@
 package com.hospital.backendHospital.models.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +17,7 @@ import java.util.UUID;
 public class FileEntity {
 
     @Id
+    @GeneratedValue
     private UUID id;
 
     private String name;

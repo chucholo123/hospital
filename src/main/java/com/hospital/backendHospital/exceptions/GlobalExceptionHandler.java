@@ -5,7 +5,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +38,33 @@ public class GlobalExceptionHandler {
     public Map<String, String> handleGenericException(Exception ex) {
         Map<String, String> errorMap = new HashMap<>();
         errorMap.put("error", "Error interno del servidor");
+        errorMap.put("detalle", ex.getMessage());
+        return errorMap;
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
+    public Map<String, String> handlerMaxSizeException (MaxUploadSizeExceededException ex) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("error", "El archivo excede los 2MB permitidos");
+        errorMap.put("detalle", ex.getMessage());
+        return errorMap;
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handlerFileNotFoundException (FileNotFoundException ex) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("error", "El archivo solicitado no se ha encontrado o no esta disponible");
+        errorMap.put("detalle", ex.getMessage());
+        return errorMap;
+    }
+
+    @ExceptionHandler(IOException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handlerIOException (IOException ex) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("error", "Error al procesar el archivo");
         errorMap.put("detalle", ex.getMessage());
         return errorMap;
     }
