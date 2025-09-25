@@ -1,18 +1,29 @@
 package com.hospital.backendHospital.services.impl;
 
+import com.hospital.backendHospital.exceptions.EntityNotFoundException;
+import com.hospital.backendHospital.models.entity.MedicalRecord;
+import com.hospital.backendHospital.repositories.MedicalRecordRepository;
 import com.hospital.backendHospital.services.IPDFGeneratorService;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
 @Service
+@RequiredArgsConstructor
 public class PDFGeneratorService implements IPDFGeneratorService {
 
+    private final MedicalRecordRepository medicalRecordRepository;
+
     @Override
-    public void export(HttpServletResponse response) throws IOException {
+    @Transactional
+    public void export(HttpServletResponse response, Long patientId) throws IOException {
+        MedicalRecord medicalRecord = medicalRecordRepository.findByPatientId(patientId).orElseThrow(() -> new EntityNotFoundException("Patient not found"));
+
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
 
@@ -20,7 +31,7 @@ public class PDFGeneratorService implements IPDFGeneratorService {
         Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
         fontTitle.setSize(18);
 
-        Paragraph paragraph = new Paragraph("This is a title.", fontTitle);
+        Paragraph paragraph = new Paragraph("Expediente medico de " + medicalRecord.getPatient().getUser().getFirstName(), fontTitle);
         paragraph.setAlignment(Paragraph.ALIGN_CENTER);
 
         Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);

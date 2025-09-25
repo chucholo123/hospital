@@ -4,6 +4,7 @@ import com.hospital.backendHospital.models.dto.fileEntity.FileResponseDto;
 import com.hospital.backendHospital.models.dto.fileEntity.ResponseMessage;
 import com.hospital.backendHospital.models.entity.FileEntity;
 import com.hospital.backendHospital.services.IFileService;
+import com.hospital.backendHospital.services.IPDFGeneratorService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,7 @@ import java.util.UUID;
 public class FileController {
 
     private final IFileService fileService;
+    private final IPDFGeneratorService pdfGeneratorService;
 
     @PostMapping("/upload")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
@@ -51,8 +53,8 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).body(files);
     }
 
-    @GetMapping("/pdf/generate")
-    public void generatePDF(HttpServletResponse response) throws IOException {
+    @GetMapping("/pdf/{patientId}/generate")
+    public void generatePDF(@PathVariable Long patientId, HttpServletResponse response) throws IOException {
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd:hh:mm:ss");
         String currentDateTime = dateFormatter.format(new Date());
@@ -61,6 +63,6 @@ public class FileController {
         String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
         response.setHeader(headerKey, headerValue);
 
-        fileService.export(response);
+        pdfGeneratorService.export(response, patientId);
     }
 }

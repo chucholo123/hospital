@@ -16,12 +16,6 @@ public class  CreateMedicalRecordDto {
     @NotNull(message = "Patient is required")
     private Long patientId;
 
-    @NotNull(message = "Doctor is required")
-    private Long doctorId;
-
-    @NotNull(message = "Appointment is required")
-    private Long appointmentId;
-
     @NotBlank(message = "Diagnostic is required")
     private String diagnostics;
 

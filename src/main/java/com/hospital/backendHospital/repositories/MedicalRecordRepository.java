@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MedicalRecordRepository extends JpaRepository<MedicalRecord, Long> {
-    List<MedicalRecord> findAllByPatientId(Long id);
+    Optional<MedicalRecord> findByPatientId(Long id);
 
-    Optional<MedicalRecord> findByAppointmentId(Long id);
-
-    boolean existsByAppointmentId(Long id);
+    boolean existsByPatientId(Long id);
 }

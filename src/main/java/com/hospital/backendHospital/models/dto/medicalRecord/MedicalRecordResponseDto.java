@@ -15,10 +15,6 @@ public class MedicalRecordResponseDto {
 
     private String patientName;
 
-    private String doctorName;
-
-    private Long appointmentId;
-
     private LocalDate date;
 
     private String diagnostics;

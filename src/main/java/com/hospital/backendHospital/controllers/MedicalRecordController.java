@@ -22,22 +22,16 @@ public class MedicalRecordController {
     private final AuthService authService;
 
     @GetMapping("/patients/{id}")
-    public ResponseEntity<List<MedicalRecordResponseDto>> listMedicalRecordsByPatient(@PathVariable Long id){
-        List<MedicalRecordResponseDto> medicalRecords = medicalRecordService.listMedicalRecordsByPatientId(id);
+    public ResponseEntity<MedicalRecordResponseDto> listMedicalRecordsByPatientId(@PathVariable Long id){
+        MedicalRecordResponseDto medicalRecords = medicalRecordService.listMedicalRecordByPatientId(id);
         return ResponseEntity.ok(medicalRecords);
     }
 
     @GetMapping("/patients/me")
-    public ResponseEntity<List<MedicalRecordResponseDto>> listMedicalRecords(){
+    public ResponseEntity<MedicalRecordResponseDto> listMedicalRecord(){
         User user = authService.getAuthenticatedUser();
-        List<MedicalRecordResponseDto> medicalRecords = medicalRecordService.listMedicalRecordsByPatientId(user.getId());
+        MedicalRecordResponseDto medicalRecords = medicalRecordService.listMedicalRecordByPatientId(user.getId());
         return ResponseEntity.ok(medicalRecords);
-    }
-
-    @GetMapping("/appointments/{id}")
-    public ResponseEntity<MedicalRecordResponseDto> listMedicalRecordByAppointment(@PathVariable Long id){
-        MedicalRecordResponseDto medicalRecord = medicalRecordService.listMedicalRecordByAppointmentId(id);
-        return ResponseEntity.ok(medicalRecord);
     }
 
     @PostMapping

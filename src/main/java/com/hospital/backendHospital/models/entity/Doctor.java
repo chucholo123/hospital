@@ -45,7 +45,4 @@ public class Doctor {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "doctor")
     private List<DoctorSchedule> schedules = new ArrayList<>();
-
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "doctor")
-    private List<MedicalRecord> medicalRecords = new ArrayList<>();
 }

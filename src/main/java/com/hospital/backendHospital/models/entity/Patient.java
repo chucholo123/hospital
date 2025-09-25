@@ -77,8 +77,4 @@ public class Patient {
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "patient")
     private List<Appointment> appointments = new ArrayList<>();
-
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "patient")
-    private List<MedicalRecord> medicalRecords = new ArrayList<>();
 }
-

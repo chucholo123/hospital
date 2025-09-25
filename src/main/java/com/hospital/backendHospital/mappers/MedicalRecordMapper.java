@@ -11,9 +11,5 @@ import java.util.List;
 public interface MedicalRecordMapper {
 
     @Mapping(target = "patientName", source = "patient.user.firstName")
-    @Mapping(target = "doctorName", source = "doctor.user.firstName")
-    @Mapping(target = "appointmentId", source = "appointment.id")
     MedicalRecordResponseDto toResponseDto(MedicalRecord medicalRecord);
-
-    List<MedicalRecordResponseDto> toListMedicalRecords(List<MedicalRecord> medicalRecords);
 }

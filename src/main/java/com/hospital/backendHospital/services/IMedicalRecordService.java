@@ -6,10 +6,7 @@ import com.hospital.backendHospital.models.dto.medicalRecord.MedicalRecordRespon
 import java.util.List;
 
 public interface IMedicalRecordService {
-
-    List<MedicalRecordResponseDto> listMedicalRecordsByPatientId(Long id);
-
-    MedicalRecordResponseDto listMedicalRecordByAppointmentId(Long id);
+    MedicalRecordResponseDto listMedicalRecordByPatientId(Long id);
 
     MedicalRecordResponseDto createMedicalRecord(CreateMedicalRecordDto createMedicalRecordDto);
 }
