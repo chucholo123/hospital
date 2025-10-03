@@ -90,8 +90,9 @@ public class SecurityConfig {
                     http.requestMatchers(HttpMethod.GET, "/api/v1/medicalRecords/appointments/{id}").hasAnyRole("DOCTOR", "PATIENT");
                     http.requestMatchers(HttpMethod.POST, "/api/v1/medicalRecords").hasRole("DOCTOR");
 
-                    // PDF
-                    http.requestMatchers(HttpMethod.GET, "/api/v1//pdf/{id}/generate").hasRole("ADMIN");
+                    // Documents
+                    http.requestMatchers(HttpMethod.GET, "/api/v1/pdf/{id}/generate").hasRole("ADMIN");
+                    http.requestMatchers(HttpMethod.GET, "/api/v1/fileManager/files").hasRole("ADMIN");
 
                     // MEDICAL SUPPLIES
                     http.requestMatchers("/api/v1/medicalSupplies/**").hasRole("ADMIN");
